@@ -47,13 +47,15 @@ jobs:
             fi
             source venv/bin/activate
 
-            # Install dependencies
+            # Upgrade pip and install dependencies
+            python3 -m pip install --upgrade pip
             pip install -r requirements.txt
 
             # Apply migrations
-            python manage.py migrate
+            python3 manage.py migrate
 
             # Restart Django
             pkill -f runserver || true
-            nohup python manage.py runserver 0.0.0.0:8000 &
+            nohup python3 manage.py runserver 0.0.0.0:8000 &
+
 
