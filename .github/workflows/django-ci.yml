@@ -30,32 +30,28 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            # 1️⃣ Clone repo if missing
-              if [ ! -d "$HOME/todo_ci-cd" ]; then
-                git clone https://github.com/latifurrafi/todo_ci-cd.git $HOME/todo_ci-cd
-              fi
+            # Clone repo if missing
+            if [ ! -d "$HOME/todo_ci-cd" ]; then
+              git clone https://github.com/latifurrafi/todo_ci-cd.git $HOME/todo_ci-cd
+            fi
 
-              cd $HOME/todo_ci-cd
+            cd $HOME/todo_ci-cd
 
-              # 2️⃣ Reset to latest main branch
-              git fetch --all
-              git reset --hard origin/main
+            # Pull latest code
+            git fetch --all
+            git reset --hard origin/main
 
-              # 3️⃣ Create venv if missing
-              if [ ! -d "venv" ]; then
-                python3 -m venv venv
-              fi
+            # Create venv if missing
+            if [ ! -d "venv" ]; then
+              python3 -m venv venv
+            fi
 
-              # 4️⃣ Activate venv
-              source venv/bin/activate
+            # Upgrade pip & install dependencies
+            $HOME/todo_ci-cd/venv/bin/python -m pip install --upgrade pip
+            $HOME/todo_ci-cd/venv/bin/python -m pip install -r requirements.txt
 
-              # 5️⃣ Upgrade pip & install dependencies
-              python -m pip install --upgrade pip
-              python -m pip install -r requirements.txt
+            # Apply migrations
+            $HOME/todo_ci-cd/venv/bin/python manage.py migrate
 
-              # 6️⃣ Apply migrations
-              python manage.py migrate
-              # 7️⃣ Restart Django server
-              pkill -f runserver || true
-              nohup python manage.py runserver 0.0.0.0:8000 &
-
+            # Restart systemd service
+            sudo systemctl restart todo
