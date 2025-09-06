@@ -47,6 +47,8 @@ jobs:
             fi
             source venv/bin/activate
 
+            sudo apt install python3-pip
+
             # Upgrade pip and install dependencies
             python3 -m pip install --upgrade pip
             pip install -r requirements.txt
