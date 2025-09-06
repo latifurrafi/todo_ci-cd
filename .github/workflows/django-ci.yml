@@ -36,7 +36,6 @@ jobs:
             fi
 
             cd $HOME/todo_ci-cd
-
             # Pull latest code
             git fetch --all
             git reset --hard origin/main
