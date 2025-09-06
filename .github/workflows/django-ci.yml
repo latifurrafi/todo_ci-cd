@@ -55,7 +55,6 @@ jobs:
 
               # 6️⃣ Apply migrations
               python manage.py migrate
-
               # 7️⃣ Restart Django server
               pkill -f runserver || true
               nohup python manage.py runserver 0.0.0.0:8000 &
